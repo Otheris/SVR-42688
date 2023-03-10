@@ -25,7 +25,7 @@ extern "C"
     uint8_t HEADER_ACCEL : 1;
     uint8_t HEADER_MSG : 1;
   }ICM_42688_HEADER_t;
-
+/*/
 typedef struct
   {
     uint8_t Header;
@@ -38,9 +38,36 @@ typedef struct
     int16_t Raw_Gyro_Y;
     int16_t Raw_Gyro_Z;
 
-    uint8_t Temperature;
+    uint16_t Temperature;
 
     uint16_t Time;
+
+    uint8_t Ext_1; 
+    uint8_t Ext_2; 
+    uint8_t Ext_3; 
+
+  } icm_42688_data_t;
+//*/
+  typedef struct
+  {
+    uint8_t Header;
+    
+    int16_t Raw_Accel_X;
+    int16_t Raw_Accel_Y;
+    int16_t Raw_Accel_Z;
+
+    int16_t Raw_Gyro_X;
+    int16_t Raw_Gyro_Y;
+    int16_t Raw_Gyro_Z;
+
+    uint16_t Temperature;
+
+    uint16_t Time;
+
+    uint8_t Ext_1; 
+    uint8_t Ext_2; 
+    uint8_t Ext_3; 
+
   } icm_42688_data_t;
 
 

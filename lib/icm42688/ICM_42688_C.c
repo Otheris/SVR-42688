@@ -256,8 +256,8 @@ ICM_42688_Status_e ICM_42688_set_full_scale(ICM_42688_Device_t *pdev, ICM_42688_
     {
       return retval;
     }    
-    reg.ACCEL_FS_SEL = 0;
-    reg.ACCEL_ODR = 0b0010; //TODO: Set to 16khz???
+    reg.ACCEL_FS_SEL = 2;
+    reg.ACCEL_ODR = 0b0110; //TODO: Set to 16khz???
     retval = ICM_42688_execute_w(pdev, ACCEL_CONFIG0, (uint8_t *)&reg, sizeof(ICM_42688_ACCEL_CONFIG0_t));
     if (retval != ICM_42688_Stat_Ok)
     {
@@ -277,8 +277,8 @@ ICM_42688_Status_e ICM_42688_set_full_scale(ICM_42688_Device_t *pdev, ICM_42688_
     {
       return retval;
     }
-    reg.GYRO_FS_SEL = 0;
-    reg.GYRO_ODR = 0b0010;
+    reg.GYRO_FS_SEL = 2;
+    reg.GYRO_ODR = 0b0110;
     retval |= ICM_42688_execute_w(pdev, GYRO_CONFIG0, (uint8_t *)&reg, sizeof(ICM_42688_GYRO_CONFIG0_t));
     if (retval != ICM_42688_Stat_Ok)
     {
@@ -546,11 +546,85 @@ int16_t inv_icm42688_swap_bytes(int16_t x)
 
 ICM_42688_Status_e inv_icm42688_read_data(ICM_42688_Device_t *pdev, icm_42688_data_t *data)
 {
-  ICM_42688_Status_e result = ICM_42688_Stat_Ok;// set default status to OK
+  ICM_42688_Status_e retval = ICM_42688_Stat_Ok;// set default status to OK
   icm_42688_data_t temp;
-  result = ICM_42688_read_FIFO(pdev, &temp, icm_42688_Packet_Bytes);
-  if (result != ICM_42688_Stat_Ok)
-    return result;
+  uint8_t ACCEL_X1;
+  uint8_t ACCEL_X0;
+  uint8_t ACCEL_Y1;
+  uint8_t ACCEL_Y0;
+  uint8_t ACCEL_Z1;
+  uint8_t ACCEL_Z0;
+
+  uint8_t GYRO_X1;
+  uint8_t GYRO_X0;
+  uint8_t GYRO_Y1;
+  uint8_t GYRO_Y0;
+  uint8_t GYRO_Z1;
+  uint8_t GYRO_Z0;
+
+  uint8_t TEMP_DATA_H;
+  uint8_t TEMP_DATA_L;
+
+  retval = ICM_42688_execute_r(pdev, ACCEL_DATA_X1, (uint8_t *)&ACCEL_X1, 1);
+    if (retval != ICM_42688_Stat_Ok)
+    return retval;
+  retval = ICM_42688_execute_r(pdev, ACCEL_DATA_X0, (uint8_t *)&ACCEL_X0, 1);
+    if (retval != ICM_42688_Stat_Ok)
+    return retval;
+  retval = ICM_42688_execute_r(pdev, ACCEL_DATA_Y1, (uint8_t *)&ACCEL_Y1, 1);
+    if (retval != ICM_42688_Stat_Ok)
+    return retval;
+  retval = ICM_42688_execute_r(pdev, ACCEL_DATA_Y0, (uint8_t *)&ACCEL_Y0, 1);
+    if (retval != ICM_42688_Stat_Ok)
+    return retval;
+  retval = ICM_42688_execute_r(pdev, ACCEL_DATA_Z1, (uint8_t *)&ACCEL_Z1, 1);
+  if (retval != ICM_42688_Stat_Ok)
+    return retval;
+  retval = ICM_42688_execute_r(pdev, ACCEL_DATA_Z0, (uint8_t *)&ACCEL_Z0, 1);
+  if (retval != ICM_42688_Stat_Ok)
+    return retval;
+  retval = ICM_42688_execute_r(pdev, GYRO_DATA_X1, (uint8_t *)&GYRO_X1, 1);
+  if (retval != ICM_42688_Stat_Ok)
+    return retval;
+  retval = ICM_42688_execute_r(pdev, GYRO_DATA_X0, (uint8_t *)&GYRO_X0, 1);
+  if (retval != ICM_42688_Stat_Ok)
+    return retval;
+  retval = ICM_42688_execute_r(pdev, GYRO_DATA_Y1, (uint8_t *)&GYRO_Y1, 1);
+  if (retval != ICM_42688_Stat_Ok)
+    return retval;
+  retval = ICM_42688_execute_r(pdev, GYRO_DATA_Y0, (uint8_t *)&GYRO_Y0, 1);
+  if (retval != ICM_42688_Stat_Ok)
+    return retval;
+  retval = ICM_42688_execute_r(pdev, GYRO_DATA_Z1, (uint8_t *)&GYRO_Z1, 1);
+  if (retval != ICM_42688_Stat_Ok)
+    return retval;
+  retval = ICM_42688_execute_r(pdev, GYRO_DATA_Z0, (uint8_t *)&GYRO_Z0, 1);
+  if (retval != ICM_42688_Stat_Ok)
+    return retval;
+  retval = ICM_42688_execute_r(pdev, TEMP_DATA1, (uint8_t *)&TEMP_DATA_H, 1);
+  if (retval != ICM_42688_Stat_Ok)
+    return retval;
+  retval = ICM_42688_execute_r(pdev, TEMP_DATA0, (uint8_t *)&TEMP_DATA_L, 1);
+  if (retval != ICM_42688_Stat_Ok)
+    return retval;
+
+
+  data->Raw_Accel_X = ((uint16_t)ACCEL_X0 << 8) | ACCEL_X1;
+  data->Raw_Accel_Y = ((uint16_t)ACCEL_Y0 << 8) | ACCEL_Y1;
+  data->Raw_Accel_Z = ((uint16_t)ACCEL_Z0 << 8) | ACCEL_Z1;
+
+  data->Raw_Gyro_X = ((uint16_t)GYRO_X0 << 8) | GYRO_X1;
+  data->Raw_Gyro_Y = ((uint16_t)GYRO_Y0 << 8) | GYRO_Y1;
+  data->Raw_Gyro_Z = ((uint16_t)GYRO_Z0 << 8) | GYRO_Z1;
+
+  data->Temperature = ((uint16_t)TEMP_DATA_L << 8) | TEMP_DATA_H;
+
+
+
+
+  //result = ICM_42688_read_FIFO(pdev, (uint8_t *)&temp, icm_42688_Packet_Bytes);
+  //if (result != ICM_42688_Stat_Ok)
+  //  return result;
   
   //temp.Raw_Accel_X = inv_icm42688_swap_bytes(temp.Raw_Accel_X);
   //temp.Raw_Accel_Y = inv_icm42688_swap_bytes(temp.Raw_Accel_Y);
@@ -561,7 +635,7 @@ ICM_42688_Status_e inv_icm42688_read_data(ICM_42688_Device_t *pdev, icm_42688_da
   //temp.Raw_Gyro_Z = inv_icm42688_swap_bytes(temp.Raw_Gyro_Z);
 
 
-  *data = temp;
+  //*data = temp;
 
-  return result;
+  return retval;
 }

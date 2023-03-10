@@ -154,7 +154,7 @@ public:
   ICM_42688_Status_e setFIFOmode(bool snapshot = false); // Default to Stream (non-Snapshot) mode
   ICM_42688_Status_e getFIFOcount(uint16_t *count);
   ICM_42688_Status_e readFIFO(uint8_t *data, uint8_t len = 1);
-  ICM_42688_Status_e readDataFromFIFO(icm_42688_data_t *data);
+  ICM_42688_Status_e readData(icm_42688_data_t *data);
 
 
   ICM_42688_Status_e setGyroSF(unsigned char div, int gyro_level);

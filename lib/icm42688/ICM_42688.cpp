@@ -754,7 +754,7 @@ ICM_42688_Status_e ICM_42688::startupDefault()
     return status;
   }
 
-  retval = enableFIFO(true); //passed value sets FIFO_MODE 0 : bypass, 1 : stream to fifo register, FIFO_CONFIG1 is also setup
+  retval = enableFIFO(false); //passed value sets FIFO_MODE 0 : bypass, 1 : stream to fifo register, FIFO_CONFIG1 is also setup
   if (retval != ICM_42688_Stat_Ok)
   {
     debugPrint(F("ICM_42688::startupDefault: enableFIFO returned: "));
@@ -837,7 +837,7 @@ ICM_42688_Status_e ICM_42688::setGyroSF(unsigned char div, int gyro_level)
     debugPrintln(F(""));
     return status;
 }
-ICM_42688_Status_e ICM_42688::readDataFromFIFO(icm_42688_data_t *data)
+ICM_42688_Status_e ICM_42688::readData(icm_42688_data_t *data)
 {
   status = inv_icm42688_read_data(&_device, data);
   return status;

@@ -35,7 +35,7 @@ extern "C"
     GYRO_DATA_Y0 = 0x28,
     GYRO_DATA_Z1 = 0x29,
     GYRO_DATA_Z0 = 0x2A,
-    TMST_FXYNCH = 0x2B,
+    TMST_FSYNCH = 0x2B,
     TMST_FSYNCL = 0x2C,
     INT_STATUS = 0x2D,
     FIFO_COUNTH = 0x2E,

@@ -26,7 +26,7 @@
 #include <ICM_42688.h>
 #include "sensor.h"
 #include <arduino-timer.h> // Used for periodically saving bias
-#include "mahony.h"
+#include "madgwick.h"
 
 class ICM42688Sensor : public Sensor
 {
@@ -59,7 +59,9 @@ private:
     void startMotionLoop();
     void checkSensorTimeout();
     void readRotation();
-    void readFIFOToEnd();
+    void readDataToEnd();
+    //void startCalibration(int calibrationType) override final;
+
 
 #define OVERRIDEDMPSETUP true
 

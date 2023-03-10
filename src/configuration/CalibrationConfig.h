@@ -78,6 +78,8 @@ namespace SlimeVR {
 
             // accelerometer bias
             int32_t A[3];
+
+            float T;
         };
 
         enum CalibrationConfigType { NONE, BMI160, MPU6050, MPU9250, ICM20948, ICM42688 };
